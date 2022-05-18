@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_example/client_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'client.dart';
 import 'client_bloc.dart';
 import 'client_events.dart';
+import 'client_states.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,12 +36,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     bloc = ClientBloc();
-    bloc.sink.add(LoadClientEvent());
+    bloc.add(LoadClientEvent());
   }
 
   @override
   void dispose() {
-    bloc.sink.close();
+    bloc.close();
     super.dispose();
   }
 
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {
               final newClient = Client(name: _randomName());
-              bloc.sink.add(AddClientEvent(client: newClient));
+              bloc.add(AddClientEvent(client: newClient));
             },
             icon: const Icon(
               Icons.person_add,
@@ -62,10 +63,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: StreamBuilder<ClientState>(
-          stream: bloc.stream,
-          builder: (context, AsyncSnapshot<ClientState> snapshot) {
-            final clients = snapshot.data?.clients ?? [];
+      body: BlocBuilder<ClientBloc, ClientState>(
+          bloc: bloc,
+          builder: (context, state) {
+            if (state is ClientInitialState) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final clients = state.clients;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: ListView.separated(
@@ -104,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       trailing: IconButton(
         icon: const Icon(Icons.person_remove, color: Colors.red),
         onPressed: () {
-          bloc.sink.add(RemoveClientEvent(client: client));
+          bloc.add(RemoveClientEvent(client: client));
         },
       ),
     );
