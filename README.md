@@ -1,3 +1,5 @@
-# Flutter BLOC Implementation
+# Flutter BLoC Implementation
 
-BLOC Pattern implementation example.
+BLoC Pattern implementation example.
+
+![demonstration](.github/assets/demonstration.gif)
