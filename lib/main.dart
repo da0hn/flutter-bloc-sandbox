@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'home_page.dart';
+
 void main() {
   runApp(MaterialApp(
-    title: 'BLOC Proof Of Concept',
+    title: 'BLoC Proof Of Concept',
     debugShowCheckedModeBanner: false,
-    home: Container(color: Colors.blue),
+    darkTheme: ThemeData.dark(),
+    home: const HomePage(),
   ));
 }
